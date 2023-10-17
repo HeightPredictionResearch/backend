@@ -4,8 +4,10 @@ import cv2
 from flask import Flask, request
 from rembg import remove
 from skimage.measure import regionprops
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route('/')
@@ -35,11 +37,11 @@ def predict():
     
     props = regionprops(thresh)
     for p in props:
-        print ('%5d %12.3f' % (p.label, p.major_axis_length))
         majL = p.axis_major_length
 
-    metrics_per_pixel = majL/16
-    tinggi = majL/56.03
+    metrics_per_pixel = majL/92.5
+    tinggi = majL/8.93
 
     os.remove(save_path)
+    print(round(tinggi,1))
     return f"{round(tinggi,1)}"
