@@ -9,7 +9,6 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-
 @app.route('/')
 def hello():
     return 'Welcome!'
@@ -45,3 +44,8 @@ def predict():
     os.remove(save_path)
     print(round(tinggi,1))
     return f"{round(tinggi,1)}"
+
+if __name__ == "__main__":
+    # This is used when running locally only. When deploying to Google App
+    # Engine, a webserver process such as Gunicorn will serve the app.
+    app.run(host="127.0.0.1", port=8080, debug=True)
