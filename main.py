@@ -6,6 +6,10 @@ from rembg import remove
 from skimage.measure import regionprops
 from flask_cors import CORS
 
+import base64
+from io import BytesIO
+from PIL import Image
+
 app = Flask(__name__)
 CORS(app)
 
@@ -16,12 +20,21 @@ def hello():
 @app.route('/predict', methods=['POST'])
 def predict():
     # Get the file from post request
-    image_file = request.files['image']
+    image_file = request.json['image']
+    base64_string = image_file.replace('data:image/png;base64,', '')
+
     current_dateTime = datetime.now()
+    filename = f'{current_dateTime.microsecond}.png'
 
     # Save the file to ./images
-    save_path = os.path.join(os.getcwd(), 'images', f'{current_dateTime.microsecond}.jpg')
-    image_file.save(save_path)
+    save_path = os.path.join(os.getcwd(), 'images', filename)
+
+    # Decode the base64 string into bytes
+    bytes_decoded = base64.b64decode(base64_string)
+
+    # Open the image from bytes and save it to a file
+    with Image.open(BytesIO(bytes_decoded)) as img:
+        img.save(save_path)
 
     # Read the image
     image = cv2.imread(save_path)
@@ -42,7 +55,6 @@ def predict():
     tinggi = majL/8.93
 
     os.remove(save_path)
-    print(round(tinggi,1))
     return f"{round(tinggi,1)}"
 
 if __name__ == "__main__":
