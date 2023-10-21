@@ -20,11 +20,14 @@ def hello():
 @app.route('/predict', methods=['POST'])
 def predict():
     # Get the file from post request
-    image_file = request.json['image']
-    base64_string = image_file.replace('data:image/png;base64,', '')
+    image_base64 = request.json['image']
+
+    # Extract the MIME type and base64 data
+    mime_type, base64_string = image_base64.split(';base64,')
+    image_format = mime_type.split('/')[-1]
 
     current_dateTime = datetime.now()
-    filename = f'{current_dateTime.microsecond}.png'
+    filename = f'{current_dateTime.microsecond}.{image_format}'
 
     # Save the file to ./images
     save_path = os.path.join(os.getcwd(), 'images', filename)
