@@ -17,8 +17,8 @@ CORS(app)
 def hello():
     return 'Welcome!'
 
-@app.route('/predict', methods=['POST'])
-def predict():
+@app.route('/api/v1/predict', methods=['POST'])
+def predictv1():
     # Get the file from post request
     image_base64 = request.json['image']
 
@@ -59,6 +59,43 @@ def predict():
 
     os.remove(save_path)
     return f"{round(tinggi,1)}"
+
+@app.route('/api/v2/predict', methods=['POST'])
+def predictv2():
+    uploaded_file = request.files['image']
+
+    # Check if the 'image' field was sent in the request
+    if uploaded_file:
+        current_dateTime = datetime.now()
+        filename = f'{current_dateTime.microsecond}.{"png"}'
+
+        # Save the file to ./images
+        save_path = os.path.join(os.getcwd(), 'images', filename)
+
+        uploaded_file.save(save_path)
+
+        # Read the image
+        image = cv2.imread(save_path)
+        image = cv2.resize(image,(880, 1320))
+
+        # Remove background
+        image = remove(image)
+
+        # Thersholding
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        _, thresh = cv2.threshold(image, 0, 255, cv2.THRESH_BINARY)
+        
+        props = regionprops(thresh)
+        for p in props:
+            majL = p.axis_major_length
+
+        metrics_per_pixel = majL/92.5
+        tinggi = majL/8.93
+
+        os.remove(save_path)
+        return f"{round(tinggi,1)}", 200
+    else:
+        return 'Image not found in the request', 400
 
 if __name__ == "__main__":
     # This is used when running locally only. When deploying to Google App
