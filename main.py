@@ -11,6 +11,7 @@ def hello():
 try:
     from controller.auth_controller import *
     from controller.height_controller import *
+    from controller.child_controller import *
     from db import *
 except Exception as e:
     print(e)

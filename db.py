@@ -3,8 +3,8 @@ from flask_migrate import Migrate
 
 from main import app
 
-# app.config["SQLALCHEMY_DATABASE_URI"] = "postgres://randstack:randstackDev321@34.122.224.222:5432/machine_learning"
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite3"
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres.xpteutzlujjsxknliwix:hariinikopi@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres"
+# app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite3"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)

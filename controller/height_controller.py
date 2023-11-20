@@ -58,8 +58,9 @@ def predictv1():
 @app.route('/api/v2/predict', methods=['POST'])
 def predictv2():
     uploaded_file = request.files['image']
-    child_id = request.files['child_id']
-    taken_date = request.files['taken_date']
+    child_id = request.form['child_id']
+    taken_date = datetime.now()
+    print(taken_date)
 
     # Check if the 'image' field was sent in the request
     if uploaded_file:

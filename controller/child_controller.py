@@ -6,8 +6,8 @@ from main import app
 @app.route('/api/v1/child', methods=['POST'])
 def create_child():
     token = request.headers['Authorization']
-    data = jwt.decode(token, key=app.config['SECRET_KEY'])
-    user_id = data['id_user']
+    data = jwt.decode(token, key=app.config['SECRET_KEY'], algorithms='HS256')
+    user_id = data['user_id']
 
     name = request.json['name']
     birth_date = request.json['birth_date']
@@ -20,7 +20,7 @@ def create_child():
 @app.route("/api/v1/child", methods=['GET'])
 def get_child():
     token = request.headers['Authorization']
-    data = jwt.decode(token, key=app.config['SECRET_KEY'])
+    data = jwt.decode(token, key=app.config['SECRET_KEY'], algorithms='HS256')
     user_id = data['user_id']
 
     children = Child.query.filter_by(user_id=user_id).all()
