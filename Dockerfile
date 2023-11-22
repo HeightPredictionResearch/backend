@@ -17,4 +17,4 @@ EXPOSE 80
 ENV FLASK_APP main
 
 # Run main.py when the container launches
-CMD ["python", "main.py"]
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 4 --timeout 600 main:app
