@@ -119,7 +119,7 @@ def get_child():
 @app.route("/api/v1/child/<id>", methods=['GET'])
 def get_child_by_id(id):
     token = request.headers['Authorization']
-    data = jwt.decode(token, key=app.config['SECRET_KEY'])
+    data = jwt.decode(token, key=app.config['SECRET_KEY'], algorithms='HS256')
     user_id = data['user_id']
 
     child = Child.query.filter_by(user_id=user_id, id=id).first()
